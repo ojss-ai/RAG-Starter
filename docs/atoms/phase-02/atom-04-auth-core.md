@@ -480,3 +480,9 @@ The audit row commits in the same transaction as the login attempt handling.
 ## Review Log
 
 ## Implementation Log
+
+- 2026-07-12 — PAUSED mid-implement (user request). Files extracted to working tree
+  (uncommitted). `pytest -q`: 16 passed, 1 FAILED — `test_schema.py::test_chunk_cascade_delete`
+  (chunks not cascade-deleted on SQLite; fails even in isolation now, though it passed at
+  atom-02 time). Suspect area: SQLite FK pragma vs passive_deletes on the shared in-memory
+  engine. Resume: debug cascade test, then finish atom-04 validate/commit.
