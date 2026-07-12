@@ -86,6 +86,12 @@ RAG_ZIP_MAX_ENTRIES=1000
 # Rate limits (requests per minute per caller)
 RAG_RATE_CHAT_RPM=30
 RAG_RATE_UPLOAD_RPM=60
+# Docker Compose service credentials (dev defaults exist but set real values here)
+POSTGRES_USER=rag
+POSTGRES_PASSWORD=rag-dev-only
+POSTGRES_DB=rag
+MINIO_ROOT_USER=minioadmin
+MINIO_ROOT_PASSWORD=minio-dev-only
 ```
 
 ```markdown file=README.md
