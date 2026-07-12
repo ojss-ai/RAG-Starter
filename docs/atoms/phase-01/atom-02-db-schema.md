@@ -222,6 +222,7 @@ async def get_session(request: Request) -> AsyncIterator[AsyncSession]:
 [alembic]
 script_location = alembic
 prepend_sys_path = .
+path_separator = os
 sqlalchemy.url =
 
 [loggers]
