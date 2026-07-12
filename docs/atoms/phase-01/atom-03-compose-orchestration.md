@@ -1,6 +1,6 @@
 # atom-03-compose-orchestration
 
-- Status: READY
+- Status: VALIDATED
 - Phase: phase-01-foundation (`docs/plans/phase-01-foundation.md`, item §01.3)
 - Traces: NFR-7, NFR-8
 - Depends on: atom-02
@@ -205,3 +205,5 @@ Notes: the api service sits behind a compose *profile* so `docker compose up -d`
 ## Review Log
 
 ## Implementation Log
+
+- 2026-07-12 — 4 files extracted — `pytest -q`: 10 passed — `docker compose config -q` OK — real-PG up/down deferred: docker daemon starting; executed before phase merge
