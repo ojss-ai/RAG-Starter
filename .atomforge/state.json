@@ -30,6 +30,22 @@
     "phase-04-chat": "READY",
     "phase-05-clients": "READY"
   },
-  "nextAtom": 1,
-  "atoms": {}
+  "nextAtom": 4,
+  "atoms": {
+    "atom-01-backend-scaffold": {
+      "phase": "phase-01",
+      "status": "READY",
+      "file": "docs/atoms/phase-01/atom-01-backend-scaffold.md"
+    },
+    "atom-02-db-schema": {
+      "phase": "phase-01",
+      "status": "READY",
+      "file": "docs/atoms/phase-01/atom-02-db-schema.md"
+    },
+    "atom-03-compose-orchestration": {
+      "phase": "phase-01",
+      "status": "READY",
+      "file": "docs/atoms/phase-01/atom-03-compose-orchestration.md"
+    }
+  }
 }
