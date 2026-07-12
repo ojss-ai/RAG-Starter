@@ -1,0 +1,73 @@
+# Software Requirements Specification (SRS)
+## Project: 100M-Scale Enterprise RAG System
+
+This document defines the functional requirements and architectural specifications for a high-scalability Retrieval-Augmented Generation (RAG) system capable of processing 100 million documents.
+
+---
+
+## 1. System Architecture & Tech Stack
+
+[Local Folder] -> (Python Watcher Script) ----+| (HTTP Multipart API)[Admin UI] ----> (Next.js/React Frontend) -> (FastAPI Backend)|--> [PostgreSQL] (Metadata & Logs)[User Chat] ---> (Next.js/React Frontend) -+ |--> [Milvus Cluster] (100M Vectors)
+
+*   **Frontend**: Next.js (App Router) & React (Tailwind CSS for UI styling).
+*   **Backend API**: FastAPI (Python) utilizing async event loops for high-throughput orchestration.
+*   **Relational Database**: PostgreSQL (Metadata tracking, chat histories, admin configurations, and audit logs).
+*   **Vector Database**: Milvus Distributed Cluster (Sharded collections, HNSW indexing for sub-second 100M search latency).
+*   **Ingestion Worker**: Celery or FastAPI Background Tasks for non-blocking document chunking and embedding generation.
+
+---
+
+## 2. Core RAG Engine Requirements
+
+### 2.1 Ingestion & Embedding Pipeline
+*   **Document Chunking**: System must split text into fixed-size chunks (e.g., 512 tokens) with an overlapping window (e.g., 10% overlap).
+*   **Embedding Generation**: Batch-process text chunks using an embedding model API (e.g., OpenAI `text-embedding-3-small` or self-hosted HuggingFace model).
+*   **Two-Way Mapping Registry**:
+    *   **PostgreSQL**: Stores absolute file paths, creation dates, chunk mappings, hashes, and unique UUIDs.
+    *   **Milvus**: Stores the high-dimensional vector embeddings along with the matching Postgres UUID as a scalar field.
+
+### 2.2 Scalability (100 Million Document Target)
+*   **Milvus Index Tuning**: Use HNSW (Hierarchical Navigable Small World) index parameters optimized for memory efficiency and search speed (e.g., `M=16`, `efConstruction=200`).
+*   **Sharding & Partitioning**: Vector collections must be explicitly partitioned or sharded by date, tenant, or category to avoid full-database scans.
+*   **Hybrid Search Routing**: FastAPI must execute keyword retrieval in Postgres (using `pg_trgm` or TSVector) and dense retrieval in Milvus, merging results using Reciprocal Rank Fusion (RRF).
+
+---
+
+## 3. Next.js Frontend Interfaces
+
+### 3.1 User Chatbox Interface
+*   **Real-time Response Streaming**: Implement Server-Sent Events (SSE) processing to render AI tokens text in real-time.
+*   **Inline Citations**: Every generated response must display interactive footnotes or anchor tags linked to the source metadata.
+*   **Context Control**: Button to clear active chat history or create a new session.
+
+### 3.2 Admin Management Dashboard
+*   **Metrics View**: Display real-time data visualizers (charts) showing total document counts, Milvus memory footprint, and API error rates.
+*   **Manual Data Ingestion**: File-drop element allowing admins to manually upload single PDFs/Text files or batch `.zip` files.
+*   **Document Ledger**: A searchable data table listing indexed files with options to delete documents, purging them from both Postgres and Milvus.
+
+---
+
+## 4. Automated Python Folder Watcher Script
+
+### 4.1 Local Monitoring Daemon
+*   **File Monitor**: Standalone Python script running as a background service utilizing the `watchdog` library to listen for file system events (`on_created`, `on_modified`).
+*   **Local State Cache**: Uses an embedded SQLite file locally to record file paths, modifications, and a SHA-256 hash.
+
+### 4.2 Network Resilience
+*   **Idempotency Check**: The script calculates file hashes before pushing to avoid uploading identical files twice.
+*   **Multipart Upload Handling**: Transmits verified files to the FastAPI server using standard `multipart/form-data`.
+*   **Retry Mechanisms**: Automatic back-off algorithm to resume uploads smoothly if network connectivity drops.
+
+---
+
+## 5. Target Core API Endpoints (FastAPI)
+
+### 5.1 End-User Core Paths
+*   `POST /api/v1/chat/stream` -> Receives query strings and session IDs; streams token chunks along with associated source document IDs.
+*   `GET /api/v1/chat/history/{session_id}` -> Fetches stored dialogue threads out of PostgreSQL.
+
+### 5.2 Admin & Watcher Operations Paths
+*   `POST /api/v1/admin/upload` -> Validates API tokens/Bearer keys; buffers incoming binary streams, dumps them to ingestion workers, and updates PostgreSQL.
+*   `DELETE /api/v1/admin/documents/{doc_id}` -> Coordinates simultaneous record drops across PostgreSQL rows and Milvus vector targets.
+*   `GET /api/v1/admin/metrics` -> Supplies total document volume and cluster performance stats.
+
