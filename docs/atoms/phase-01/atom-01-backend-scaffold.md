@@ -1,6 +1,6 @@
 # atom-01-backend-scaffold
 
-- Status: READY
+- Status: VALIDATED
 - Phase: phase-01-foundation (`docs/plans/phase-01-foundation.md`, item §01.1 + harness slice of §01.3)
 - Traces: NFR-4, NFR-5, NFR-7, NFR-8
 - Depends on: none
@@ -97,14 +97,12 @@ Built with [AtomForge](docs/srs.md) — see `docs/` for the SRS, phase plans, an
 
 ## Quick start
 
-```bash
-cp .env.example .env                     # set secrets
-docker compose up -d postgres milvus    # backing services
-cd backend && python -m venv .venv && . .venv/Scripts/activate
-pip install -r requirements.txt -r requirements-dev.txt
-alembic upgrade head
-uvicorn app.main:app --reload           # http://localhost:8000/docs
-```
+    cp .env.example .env                    # set secrets
+    make up                                 # postgres + milvus via docker compose
+    cd backend && python -m venv .venv && . .venv/Scripts/activate
+    pip install -r requirements.txt -r requirements-dev.txt
+    alembic upgrade head
+    uvicorn app.main:app --reload           # http://localhost:8000/docs
 
 Tests: `cd backend && python -m pytest -q`
 
@@ -412,3 +410,5 @@ explicitly. `sqlite+aiosqlite://` is a fresh in-memory DB per engine.
 ## Review Log
 
 ## Implementation Log
+
+- 2026-07-12 — 15 files extracted — `pytest -q`: 3 passed — validate: verification steps re-run, no OPEN findings — no deviations
