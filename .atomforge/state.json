@@ -30,7 +30,7 @@
     "phase-04-chat": "READY",
     "phase-05-clients": "READY"
   },
-  "nextAtom": 4,
+  "nextAtom": 7,
   "atoms": {
     "atom-01-backend-scaffold": {
       "phase": "phase-01",
@@ -44,8 +44,23 @@
     },
     "atom-03-compose-orchestration": {
       "phase": "phase-01",
-      "status": "VALIDATED",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-01/atom-03-compose-orchestration.md"
+    },
+    "atom-04-auth-core": {
+      "phase": "phase-02",
+      "status": "READY",
+      "file": "docs/atoms/phase-02/atom-04-auth-core.md"
+    },
+    "atom-05-rbac-api-keys": {
+      "phase": "phase-02",
+      "status": "READY",
+      "file": "docs/atoms/phase-02/atom-05-rbac-api-keys.md"
+    },
+    "atom-06-rate-limit-audit": {
+      "phase": "phase-02",
+      "status": "READY",
+      "file": "docs/atoms/phase-02/atom-06-rate-limit-audit.md"
     }
   }
 }
