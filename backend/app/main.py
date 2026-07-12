@@ -5,9 +5,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
+from app.api.auth import router as auth_router
 from app.config import Settings, get_settings
 from app.db import build_engine, build_sessionmaker
 from app.logging_setup import RequestIdMiddleware, setup_logging
+from app.services.bootstrap import ensure_bootstrap_admin
 
 log = logging.getLogger(__name__)
 
@@ -21,6 +23,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.state.settings = settings
         app.state.engine = build_engine(settings.database_url)
         app.state.sessionmaker = build_sessionmaker(app.state.engine)
+        await ensure_bootstrap_admin(app.state.sessionmaker, settings)
         log.info("startup complete", extra={"extra_fields": {"env": settings.env}})
         yield
         await app.state.engine.dispose()
@@ -34,6 +37,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    app.include_router(auth_router)
 
     @app.get("/healthz")
     async def healthz() -> dict[str, str]:
