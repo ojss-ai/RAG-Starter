@@ -34,7 +34,7 @@
   "atoms": {
     "atom-01-backend-scaffold": {
       "phase": "phase-01",
-      "status": "READY",
+      "status": "VALIDATED",
       "file": "docs/atoms/phase-01/atom-01-backend-scaffold.md"
     },
     "atom-02-db-schema": {
