@@ -1,0 +1,13 @@
+{
+  "framework": "atomforge",
+  "version": "1.1.0",
+  "setupDate": "2026-07-12",
+  "mode": "normal",
+  "stack": ["python", "fastapi", "postgres", "milvus", "nextjs", "react", "typescript", "tailwind"],
+  "testRunner": "cd backend && python -m pytest -q",
+  "srs": { "file": "docs/srs.md", "status": "READY" },
+  "design": { "file": "docs/design/design-guide.md", "status": "NONE", "sources": [] },
+  "plans": {},
+  "nextAtom": 1,
+  "atoms": {}
+}
