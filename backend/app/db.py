@@ -1,6 +1,7 @@
 from collections.abc import AsyncIterator
 
 from fastapi import Request
+from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
@@ -10,7 +11,12 @@ class Base(DeclarativeBase):
 
 
 def build_engine(database_url: str):
-    return create_async_engine(database_url, pool_pre_ping=True)
+    engine = create_async_engine(database_url, pool_pre_ping=True)
+    if engine.dialect.name == "sqlite":
+        @event.listens_for(engine.sync_engine, "connect")
+        def _fk_on(dbapi_conn, _):  # SQLite needs FKs switched on per connection
+            dbapi_conn.execute("PRAGMA foreign_keys=ON")
+    return engine
 
 
 def build_sessionmaker(engine) -> async_sessionmaker[AsyncSession]:
