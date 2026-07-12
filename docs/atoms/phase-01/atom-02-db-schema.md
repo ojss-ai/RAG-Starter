@@ -1,6 +1,6 @@
 # atom-02-db-schema
 
-- Status: READY
+- Status: VALIDATED
 - Phase: phase-01-foundation (`docs/plans/phase-01-foundation.md`, item §01.2)
 - Traces: FR-3, FR-4, FR-11, FR-14, FR-16, FR-17 (schema only), NFR-1
 - Depends on: atom-01
@@ -482,3 +482,5 @@ schema-loaded engine so API tests and direct session tests see the same in-memor
 ## Review Log
 
 ## Implementation Log
+
+- 2026-07-12 — 8 files extracted (conftest replaced per plan) — `pytest -q`: 8 passed — validate: constraints/cascade/CHECK tests green — PG up/down deferred to atom-03 verification as documented
