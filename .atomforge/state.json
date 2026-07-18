@@ -109,7 +109,7 @@
     },
     "atom-16-chat-ui": {
       "phase": "phase-05",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-05/atom-16-chat-ui.md"
     },
     "atom-17-admin-dashboard": {
