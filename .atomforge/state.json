@@ -89,7 +89,7 @@
     },
     "atom-12-chat-stream": {
       "phase": "phase-04",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-04/atom-12-chat-stream.md"
     },
     "atom-13-sessions-history": {

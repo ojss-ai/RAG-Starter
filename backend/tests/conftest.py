@@ -4,6 +4,7 @@ from httpx import ASGITransport, AsyncClient
 from app.config import Settings
 from app.db import Base, build_engine, build_sessionmaker
 from app.ingest.embeddings import FakeEmbeddingProvider
+from app.llm.providers import FakeLLMProvider
 from app.main import create_app
 from app.models import User
 from app.security.passwords import hash_password
@@ -60,6 +61,7 @@ async def app(db_engine, app_settings):
     application.state.vector_store = InMemoryVectorStore()
     application.state.embedder = FakeEmbeddingProvider(dim=app_settings.embed_dim)
     application.state.task_queue = EagerTaskQueue()
+    application.state.llm = FakeLLMProvider()
     # seed the two standard test accounts
     async with application.state.sessionmaker() as session:
         session.add(User(email=ADMIN_EMAIL, password_hash=hash_password(ADMIN_PASSWORD),

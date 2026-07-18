@@ -101,3 +101,7 @@ class MetricsOut(BaseModel):
     http_requests: int
     http_errors: int
     error_rate: float
+
+class ChatStreamRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=4000)
+    session_id: uuid.UUID | None = None
