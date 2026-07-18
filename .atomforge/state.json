@@ -104,7 +104,7 @@
     },
     "atom-15-frontend-scaffold-auth": {
       "phase": "phase-05",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-05/atom-15-frontend-scaffold-auth.md"
     },
     "atom-16-chat-ui": {

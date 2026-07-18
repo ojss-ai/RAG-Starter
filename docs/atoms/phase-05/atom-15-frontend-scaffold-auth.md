@@ -1,6 +1,6 @@
 # atom-15-frontend-scaffold-auth
 
-- Status: DRAFT
+- Status: COMMITTED
 - Phase: phase-05-clients (`docs/plans/phase-05-clients.md`, item §05.2)
 - Traces: FR-14 (UI), NFR-7
 - Depends on: atom-13 (API surface complete)
@@ -43,7 +43,7 @@ mandates default exports — that is the single documented exception. Feature co
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test tests/",
+    "test": "node --import tsx --test tests/*.test.ts",
     "lint": "next lint"
   },
   "dependencies": {
@@ -468,4 +468,14 @@ oracle. `apiFetch` handles FormData bodies (no forced Content-Type) — the admi
 
 ## Review Log
 
+- 2026-07-17 — review-atom: freshness ✓ (auth API shape matches atoms 04/05: /auth/login TokenResponse, /auth/me role field), completeness ✓ (all config + source files with full code; nextjs/react/typescript skill rules respected — default exports only in route-segment files), traceability ✓ (FR-14 UI, NFR-7 / plan §05.2). Certified READY.
+
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom. One deviation (atom updated): the test script
+  `node --import tsx --test tests/` fails on Node 22 (directory resolved as module);
+  changed to `node --import tsx --test tests/*.test.ts`. Oracle: `tsc --noEmit` clean,
+  `npm test` 2/2 pass, `next build` clean (static routes /, /login).
+- 2026-07-17 — VALIDATED. All three oracle legs green. Manual dev-server login flow
+  deferred to atom-16/17 validation (same auth path exercised there). No OPEN findings.
+  review-change clean.
