@@ -99,7 +99,7 @@
     },
     "atom-14-watcher-daemon": {
       "phase": "phase-05",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-05/atom-14-watcher-daemon.md"
     },
     "atom-15-frontend-scaffold-auth": {
