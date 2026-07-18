@@ -54,7 +54,7 @@
     },
     "atom-05-rbac-api-keys": {
       "phase": "phase-02",
-      "status": "READY",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-02/atom-05-rbac-api-keys.md"
     },
     "atom-06-rate-limit-audit": {
