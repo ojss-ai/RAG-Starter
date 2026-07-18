@@ -3,9 +3,12 @@ from httpx import ASGITransport, AsyncClient
 
 from app.config import Settings
 from app.db import Base, build_engine, build_sessionmaker
+from app.ingest.embeddings import FakeEmbeddingProvider
 from app.main import create_app
 from app.models import User
 from app.security.passwords import hash_password
+from app.services.tasks import EagerTaskQueue
+from app.vectorstore.memory import InMemoryVectorStore
 from app import models  # noqa: F401  (registers tables)
 
 ADMIN_EMAIL = "admin@test.io"
@@ -21,6 +24,7 @@ def test_settings(**overrides) -> Settings:
         env="test",
         bootstrap_admin_email=ADMIN_EMAIL,
         bootstrap_admin_password=ADMIN_PASSWORD,
+        embed_dim=8,
         **overrides,
     )
 
@@ -42,8 +46,8 @@ async def db_session(db_engine):
 
 
 @pytest.fixture
-def app_settings():
-    return test_settings()
+def app_settings(tmp_path):
+    return test_settings(upload_dir=str(tmp_path / "uploads"))
 
 
 @pytest.fixture
@@ -53,6 +57,9 @@ async def app(db_engine, app_settings):
     application.state.settings = app_settings
     application.state.engine = db_engine
     application.state.sessionmaker = build_sessionmaker(db_engine)
+    application.state.vector_store = InMemoryVectorStore()
+    application.state.embedder = FakeEmbeddingProvider(dim=app_settings.embed_dim)
+    application.state.task_queue = EagerTaskQueue()
     # seed the two standard test accounts
     async with application.state.sessionmaker() as session:
         session.add(User(email=ADMIN_EMAIL, password_hash=hash_password(ADMIN_PASSWORD),

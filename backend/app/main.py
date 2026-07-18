@@ -7,13 +7,17 @@ from sqlalchemy import text
 
 from app.api.admin_audit import router as admin_audit_router
 from app.api.admin_keys import router as admin_keys_router
+from app.api.admin_upload import router as admin_upload_router
 from app.api.admin_users import router as admin_users_router
 from app.api.auth import router as auth_router
 from app.config import Settings, get_settings
 from app.db import build_engine, build_sessionmaker
+from app.ingest.embeddings import get_embedding_provider
 from app.logging_setup import RequestIdMiddleware, setup_logging
 from app.security.ratelimit import RateLimiter
 from app.services.bootstrap import ensure_bootstrap_admin
+from app.services.tasks import BackgroundTaskQueue
+from app.vectorstore import get_vector_store
 
 log = logging.getLogger(__name__)
 
@@ -27,6 +31,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.state.settings = settings
         app.state.engine = build_engine(settings.database_url)
         app.state.sessionmaker = build_sessionmaker(app.state.engine)
+        app.state.vector_store = get_vector_store(settings)
+        await app.state.vector_store.ensure_ready()
+        app.state.embedder = get_embedding_provider(settings)
+        app.state.task_queue = BackgroundTaskQueue()
         await ensure_bootstrap_admin(app.state.sessionmaker, settings)
         log.info("startup complete", extra={"extra_fields": {"env": settings.env}})
         yield
@@ -46,6 +54,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(admin_keys_router)
     app.include_router(admin_users_router)
     app.include_router(admin_audit_router)
+    app.include_router(admin_upload_router)
 
     @app.get("/healthz")
     async def healthz() -> dict[str, str]:

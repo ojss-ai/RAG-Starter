@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from typing import Literal
 
@@ -60,3 +61,15 @@ class AuditOut(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class UploadedDoc(BaseModel):
+    id: uuid.UUID
+    filename: str
+    status: str
+    duplicate: bool = False
+
+
+class UploadResponse(BaseModel):
+    documents: list[UploadedDoc]
+    rejected: list[str]

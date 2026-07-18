@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     upload_max_mb: int = 100
     upload_allowed_ext: list[str] = [".pdf", ".txt", ".md", ".zip"]
     zip_max_entries: int = 1000
+    upload_dir: str = "./data/uploads"
 
     rate_chat_rpm: int = 30
     rate_upload_rpm: int = 60
