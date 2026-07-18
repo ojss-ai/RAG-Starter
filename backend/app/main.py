@@ -5,12 +5,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
+from app.api.admin_audit import router as admin_audit_router
 from app.api.admin_keys import router as admin_keys_router
 from app.api.admin_users import router as admin_users_router
 from app.api.auth import router as auth_router
 from app.config import Settings, get_settings
 from app.db import build_engine, build_sessionmaker
 from app.logging_setup import RequestIdMiddleware, setup_logging
+from app.security.ratelimit import RateLimiter
 from app.services.bootstrap import ensure_bootstrap_admin
 
 log = logging.getLogger(__name__)
@@ -31,6 +33,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         await app.state.engine.dispose()
 
     app = FastAPI(title=settings.app_name, lifespan=lifespan)
+    app.state.rate_limiter = RateLimiter()
     app.add_middleware(RequestIdMiddleware)
     app.add_middleware(
         CORSMiddleware,
@@ -42,6 +45,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(auth_router)
     app.include_router(admin_keys_router)
     app.include_router(admin_users_router)
+    app.include_router(admin_audit_router)
 
     @app.get("/healthz")
     async def healthz() -> dict[str, str]:

@@ -59,7 +59,7 @@
     },
     "atom-06-rate-limit-audit": {
       "phase": "phase-02",
-      "status": "READY",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-02/atom-06-rate-limit-audit.md"
     },
     "atom-07-ingest-core": {

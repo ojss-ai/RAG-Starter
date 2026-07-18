@@ -49,3 +49,14 @@ class ApiKeyCreated(BaseModel):
     name: str
     scope: str
     api_key: str  # plaintext — returned exactly once at creation
+
+
+class AuditOut(BaseModel):
+    id: int
+    actor: str
+    action: str
+    target: str
+    detail: dict
+    created_at: datetime
+
+    model_config = {"from_attributes": True}

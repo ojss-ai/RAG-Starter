@@ -1,6 +1,6 @@
 # atom-06-rate-limit-audit
 
-- Status: READY
+- Status: COMMITTED
 - Phase: phase-02-security (`docs/plans/phase-02-security.md`, item §02.3)
 - Traces: FR-19, FR-17
 - Depends on: atom-05
@@ -278,7 +278,7 @@ def test_bucket_isolated_per_key():
 
 
 def _probe(app):
-    if not any(r.path == "/test/limited" for r in app.routes):
+    if not any(getattr(r, "path", None) == "/test/limited" for r in app.routes):
         @app.get("/test/limited", dependencies=[Depends(rate_limit("chat"))])
         async def limited():
             return {"ok": True}
@@ -316,3 +316,9 @@ works because the dependency reads settings per-request from `app.state.settings
 ## Review Log
 
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom (all file= blocks extracted). Same probe-helper
+  deviation as atom-05 (`getattr(r, "path", None)`), applied to test + doc. Suite 26/26.
+- 2026-07-17 — VALIDATED. Rate-limit 429 + Retry-After covered over HTTP by
+  test_rate_limit_429_with_retry_after (manual-hammer equivalent); audit endpoint
+  admin-gated and paginated. No OPEN findings. review-change clean.
