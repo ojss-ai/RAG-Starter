@@ -12,6 +12,7 @@ from app.api.admin_upload import router as admin_upload_router
 from app.api.admin_users import router as admin_users_router
 from app.api.auth import router as auth_router
 from app.api.chat import router as chat_router
+from app.api.chat_sessions import router as chat_sessions_router
 from app.api.metrics import router as metrics_router
 from app.config import Settings, get_settings
 from app.db import build_engine, build_sessionmaker
@@ -66,6 +67,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(admin_documents_router)
     app.include_router(metrics_router)
     app.include_router(chat_router)
+    app.include_router(chat_sessions_router)
 
     @app.get("/healthz")
     async def healthz() -> dict[str, str]:

@@ -105,3 +105,21 @@ class MetricsOut(BaseModel):
 class ChatStreamRequest(BaseModel):
     message: str = Field(min_length=1, max_length=4000)
     session_id: uuid.UUID | None = None
+
+class ChatSessionOut(BaseModel):
+    id: uuid.UUID
+    title: str
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class ChatMessageOut(BaseModel):
+    id: int
+    role: str
+    content: str
+    sources: list
+    truncated: bool
+    created_at: datetime
+
+    model_config = {"from_attributes": True}

@@ -94,7 +94,7 @@
     },
     "atom-13-sessions-history": {
       "phase": "phase-04",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-04/atom-13-sessions-history.md"
     },
     "atom-14-watcher-daemon": {
