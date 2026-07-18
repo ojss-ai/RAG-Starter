@@ -64,7 +64,7 @@
     },
     "atom-07-ingest-core": {
       "phase": "phase-03",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-03/atom-07-ingest-core.md"
     },
     "atom-08-vector-store": {
