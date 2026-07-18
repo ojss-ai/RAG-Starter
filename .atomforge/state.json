@@ -84,7 +84,7 @@
     },
     "atom-11-hybrid-retrieval": {
       "phase": "phase-04",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-04/atom-11-hybrid-retrieval.md"
     },
     "atom-12-chat-stream": {

@@ -1,6 +1,6 @@
 # atom-11-hybrid-retrieval
 
-- Status: DRAFT
+- Status: COMMITTED
 - Phase: phase-04-chat (`docs/plans/phase-04-chat.md`, item §04.1)
 - Traces: FR-8, NFR-1
 - Depends on: atom-10
@@ -154,12 +154,15 @@ from app.vectorstore import VectorItem
 
 
 def test_rrf_known_fusion():
-    # doc B is #2 in both lists; A and C are #1 in one list each → B wins with k=0-ish
+    # symmetric rankings: A and C swap ranks 1/3, B is #2 in both
     fused = rrf([["A", "B", "C"], ["C", "B", "A"]], k=1)
     scores = dict(fused)
-    assert scores["B"] > scores["A"]
-    assert scores["A"] == scores["C"]  # symmetric ranks → equal score
-    assert fused[0][0] == "B"
+    assert scores["A"] == scores["C"]              # symmetric ranks → equal score
+    assert abs(scores["B"] - 2 / 3) < 1e-9         # 2 × 1/(1+2)
+    assert fused[0][0] == "A"                      # tie A/C broken on str(id)
+    # consensus: an item ranked high in BOTH lists beats single-list items
+    fused2 = rrf([["A", "B"], ["B", "C"]], k=1)
+    assert fused2[0][0] == "B"
 
 
 def test_rrf_empty_and_single():
@@ -201,6 +204,10 @@ async def test_keyword_fallback_ranks_by_overlap(app):
 
 
 async def test_hybrid_retrieve_end_to_end(app, app_settings):
+    # dim=8 (conftest default) has too many hash collisions for a 3-doc relevance
+    # assertion — use a wider fake embedder for this test.
+    from app.ingest.embeddings import FakeEmbeddingProvider
+    app.state.embedder = FakeEmbeddingProvider(dim=32)
     await _seed(app, {
         "policy.txt": "vacation policy grants twenty days of paid vacation per year",
         "recipe.txt": "chocolate cake recipe with sugar and flour",
@@ -232,4 +239,17 @@ the compose stack); tests here cover the fallback leg, the fusion math, and the 
 
 ## Review Log
 
+- 2026-07-17 — review-atom: freshness ✓ (retrieval_top_k/rrf_k in config; VectorStore/EmbeddingProvider signatures match atoms 07/08; ts column unmapped as expected), completeness ✓, traceability ✓ (FR-8, NFR-1 / plan §04.1). PG tsquery leg verification is compose-environment-dependent. Certified READY.
+
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom. Two test deviations (atom updated to match):
+  (1) test_rrf_known_fusion asserted B > A for symmetric rankings, which contradicts the
+  RRF formula (A = 1/2 + 1/4 = 0.75 > B = 2/3 at k=1); rewritten to assert the correct
+  scores plus a proper consensus-wins case. (2) e2e relevance assertion was an RRF tie
+  broken by random uuid strings at dim=8 (hash collisions invert the vector leg, verified
+  numerically); test now uses FakeEmbeddingProvider(dim=32). Implementation code unchanged.
+  `pytest -q` → 52 passed.
+- 2026-07-17 — VALIDATED. Fusion math, keyword fallback, hybrid e2e, empty corpus all
+  green. PG tsquery leg deferred to compose verification. No OPEN findings.
+  review-change clean.
