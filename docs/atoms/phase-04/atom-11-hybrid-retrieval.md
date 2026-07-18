@@ -243,6 +243,8 @@ the compose stack); tests here cover the fallback leg, the fusion math, and the 
 
 ## Implementation Log
 
+- 2026-07-17 — Verification 2 executed on embedded PostgreSQL 16 (pgserver): tsquery leg returns ranked ids; EXPLAIN shows Bitmap Index Scan on ix_chunks_ts (GIN).
+
 - 2026-07-17 — Implemented per atom. Two test deviations (atom updated to match):
   (1) test_rrf_known_fusion asserted B > A for symmetric rankings, which contradicts the
   RRF formula (A = 1/2 + 1/4 = 0.75 > B = 2/3 at k=1); rewritten to assert the correct

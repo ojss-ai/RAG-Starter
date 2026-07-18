@@ -282,6 +282,8 @@ must never be interpolated into Milvus filters.
 
 ## Implementation Log
 
+- 2026-07-17 — Verification 2 executed via milvus-lite (same MilvusClient API): ensure_ready created the collection (partition-key + HNSW/COSINE accepted), upsert/search/partition-filter/delete_document/stats all correct.
+
 - 2026-07-17 — Implemented per atom, zero deviations. `pytest -q` → 38 passed (pymilvus
   not required; lazy-import test green).
 - 2026-07-17 — VALIDATED. Suite green; milvus live-check deferred to compose environment
