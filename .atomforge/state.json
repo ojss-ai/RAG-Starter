@@ -114,7 +114,7 @@
     },
     "atom-17-admin-dashboard": {
       "phase": "phase-05",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-05/atom-17-admin-dashboard.md"
     }
   }
