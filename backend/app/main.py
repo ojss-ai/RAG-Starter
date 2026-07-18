@@ -6,15 +6,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.api.admin_audit import router as admin_audit_router
+from app.api.admin_documents import router as admin_documents_router
 from app.api.admin_keys import router as admin_keys_router
 from app.api.admin_upload import router as admin_upload_router
 from app.api.admin_users import router as admin_users_router
 from app.api.auth import router as auth_router
+from app.api.metrics import router as metrics_router
 from app.config import Settings, get_settings
 from app.db import build_engine, build_sessionmaker
 from app.ingest.embeddings import get_embedding_provider
 from app.logging_setup import RequestIdMiddleware, setup_logging
 from app.security.ratelimit import RateLimiter
+from app.services.metrics import HttpMetrics, HttpMetricsMiddleware
 from app.services.bootstrap import ensure_bootstrap_admin
 from app.services.tasks import BackgroundTaskQueue
 from app.vectorstore import get_vector_store
@@ -42,6 +45,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app = FastAPI(title=settings.app_name, lifespan=lifespan)
     app.state.rate_limiter = RateLimiter()
+    app.state.http_metrics = HttpMetrics()
+    app.add_middleware(HttpMetricsMiddleware)
     app.add_middleware(RequestIdMiddleware)
     app.add_middleware(
         CORSMiddleware,
@@ -55,6 +60,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(admin_users_router)
     app.include_router(admin_audit_router)
     app.include_router(admin_upload_router)
+    app.include_router(admin_documents_router)
+    app.include_router(metrics_router)
 
     @app.get("/healthz")
     async def healthz() -> dict[str, str]:

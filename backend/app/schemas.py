@@ -73,3 +73,31 @@ class UploadedDoc(BaseModel):
 class UploadResponse(BaseModel):
     documents: list[UploadedDoc]
     rejected: list[str]
+
+class DocumentOut(BaseModel):
+    id: uuid.UUID
+    filename: str
+    status: str
+    error: str | None
+    size_bytes: int
+    partition_key: str
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class DocumentList(BaseModel):
+    total: int
+    documents: list[DocumentOut]
+
+
+class MetricsOut(BaseModel):
+    documents_by_status: dict[str, int]
+    documents_total: int
+    chunks_total: int
+    vector_backend: str
+    vectors_total: int
+    http_requests: int
+    http_errors: int
+    error_rate: float
