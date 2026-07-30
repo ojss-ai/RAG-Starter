@@ -1,6 +1,6 @@
 # atom-14-watcher-daemon
 
-- Status: DRAFT
+- Status: COMMITTED
 - Phase: phase-05-clients (`docs/plans/phase-05-clients.md`, item §05.1)
 - Traces: FR-12, FR-13
 - Depends on: atom-09 (upload endpoint + API keys live)
@@ -463,4 +463,11 @@ in `core.py`/`uploader.py`/`state.py`, which the tests cover without threads.
 
 ## Review Log
 
+- 2026-07-17 — review-atom: freshness ✓ (upload endpoint + X-API-Key auth live per atoms 05/09; pure client, no backend imports), completeness ✓, traceability ✓ (FR-12/13 / plan §05.1). Certified READY.
+
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom, zero deviations. `cd watcher && pytest -q` → 7 passed.
+- 2026-07-17 — VALIDATED. Manual `--once` against the live API with a real ingest key:
+  2 files uploaded, ledger shows both INDEXED; second scan skips (hash cache). Back-off,
+  permanent-4xx, idempotency covered by tests. No OPEN findings. review-change clean.

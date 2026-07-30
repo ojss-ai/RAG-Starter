@@ -1,6 +1,6 @@
 # atom-10-ledger-delete-metrics
 
-- Status: DRAFT
+- Status: COMMITTED
 - Phase: phase-03-ingestion (`docs/plans/phase-03-ingestion.md`, item §03.4)
 - Traces: FR-7, FR-20, FR-17
 - Depends on: atom-09
@@ -296,4 +296,12 @@ observation happens inside a request-id context.
 
 ## Review Log
 
+- 2026-07-17 — review-atom: freshness ✓ (atom-09 main.py/schemas.py are the exact base these instructions modify; vector_store/http state names match), completeness ✓ (append-helper + 3-step main.py edit are explicit), traceability ✓ (FR-7/17/20 / plan §03.4). Certified READY.
+
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom: helper block merged into schemas.py and deleted;
+  main.py 3-step wiring applied (HttpMetricsMiddleware added before RequestIdMiddleware in
+  code, so RequestId is outermost). `pytest -q` → 47 passed. Zero deviations.
+- 2026-07-17 — VALIDATED. Ledger search/filter/pagination, dual-store delete + audit,
+  metrics counts + error-rate all verified over HTTP. No OPEN findings. review-change clean.

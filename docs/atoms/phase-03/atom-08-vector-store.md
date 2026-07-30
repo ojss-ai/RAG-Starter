@@ -1,6 +1,6 @@
 # atom-08-vector-store
 
-- Status: DRAFT
+- Status: COMMITTED
 - Phase: phase-03-ingestion (`docs/plans/phase-03-ingestion.md`, item §03.2)
 - Traces: FR-3, NFR-1, NFR-3, NFR-8
 - Depends on: atom-07
@@ -278,4 +278,13 @@ must never be interpolated into Milvus filters.
 
 ## Review Log
 
+- 2026-07-17 — review-atom: freshness ✓ (vector_backend/milvus_* /embed_dim present in config.py; no import drift), completeness ✓, traceability ✓ (FR-3, NFR-1/3/8 / plan §03.2). Milvus verification step requires the compose stack — recorded as environment-dependent. Certified READY.
+
 ## Implementation Log
+
+- 2026-07-17 — Verification 2 executed via milvus-lite (same MilvusClient API): ensure_ready created the collection (partition-key + HNSW/COSINE accepted), upsert/search/partition-filter/delete_document/stats all correct.
+
+- 2026-07-17 — Implemented per atom, zero deviations. `pytest -q` → 38 passed (pymilvus
+  not required; lazy-import test green).
+- 2026-07-17 — VALIDATED. Suite green; milvus live-check deferred to compose environment
+  (documented in Review Log). No OPEN findings. review-change clean.

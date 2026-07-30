@@ -1,6 +1,6 @@
 # atom-12-chat-stream
 
-- Status: DRAFT
+- Status: COMMITTED
 - Phase: phase-04-chat (`docs/plans/phase-04-chat.md`, item §04.2)
 - Traces: FR-9, FR-10, FR-19
 - Depends on: atom-11
@@ -60,10 +60,12 @@ class LLMError(Exception):
 
 class FakeLLMProvider:
     """Deterministic offline provider: answers reference source [1] when sources exist
-    (the system prompt contains 'Sources:'), matching how tests assert citations."""
+    (the system prompt contains a numbered '[1] (' entry), matching how tests assert
+    citations. Checking the bare 'Sources:' header is wrong — it is present even when
+    the block is '(none)'."""
 
     async def stream_chat(self, messages: list[dict]) -> AsyncIterator[str]:
-        has_sources = any("Sources:" in m.get("content", "") for m in messages)
+        has_sources = any("[1] (" in m.get("content", "") for m in messages)
         if has_sources:
             reply = "Based on the provided sources, the answer is grounded in [1]."
         else:
@@ -351,4 +353,15 @@ the session id created for a first message.
 
 ## Review Log
 
+- 2026-07-17 — review-atom: freshness ✓ (retrieve() signature matches atom-11 as landed; rate_limit("chat") + llm_* settings exist; ChatSession/ChatMessage models match), completeness ✓ (append helper + explicit main/conftest deltas), traceability ✓ (FR-9/10/19 / plan §04.2). Certified READY.
+
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom (helper merged into schemas.py + deleted; main/conftest
+  deltas applied). One deviation (atom updated): FakeLLMProvider's source detection keyed
+  on the bare 'Sources:' header, which the system prompt always contains even for the
+  '(none)' block — now keys on a numbered '[1] (' entry. `pytest -q` → 57 passed.
+- 2026-07-17 — VALIDATED. SSE order (session→token*→sources→done), persistence of both
+  turns with sources, session reuse + foreign-session 404, auth + 429, honest no-source
+  answer all green. Manual curl -N smoke: live token events streamed. No OPEN findings.
+  review-change clean.

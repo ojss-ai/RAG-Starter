@@ -1,6 +1,6 @@
 # atom-09-upload-pipeline
 
-- Status: DRAFT
+- Status: COMMITTED
 - Phase: phase-03-ingestion (`docs/plans/phase-03-ingestion.md`, item §03.3)
 - Traces: FR-4, FR-5, FR-6, FR-18, FR-17, NFR-2, NFR-6
 - Depends on: atom-08
@@ -688,4 +688,12 @@ tests are deterministic; production uses `BackgroundTaskQueue`.
 
 ## Review Log
 
+- 2026-07-17 — review-atom: freshness ✓ (config/main/conftest full-file blocks match current tree state + additions; require_ingest & rate_limit exist from atoms 05/06), completeness ✓, traceability ✓ (FR-4/5/6/17/18, NFR-2/6 / plan §03.3). Certified READY.
+
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom, zero deviations. `pytest -q` → 44 passed.
+- 2026-07-17 — VALIDATED. Upload → INDEXED flow, dedupe, zip batch, size/type limits,
+  auth+audit all covered over HTTP; NFR-6 rollback verified (FAILED doc has zero
+  vectors/chunks). Manual /docs check equivalent covered by tests; documents listing
+  endpoint arrives in atom-10. No OPEN findings. review-change clean.

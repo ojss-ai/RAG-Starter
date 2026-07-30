@@ -49,72 +49,72 @@
     },
     "atom-04-auth-core": {
       "phase": "phase-02",
-      "status": "READY",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-02/atom-04-auth-core.md"
     },
     "atom-05-rbac-api-keys": {
       "phase": "phase-02",
-      "status": "READY",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-02/atom-05-rbac-api-keys.md"
     },
     "atom-06-rate-limit-audit": {
       "phase": "phase-02",
-      "status": "READY",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-02/atom-06-rate-limit-audit.md"
     },
     "atom-07-ingest-core": {
       "phase": "phase-03",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-03/atom-07-ingest-core.md"
     },
     "atom-08-vector-store": {
       "phase": "phase-03",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-03/atom-08-vector-store.md"
     },
     "atom-09-upload-pipeline": {
       "phase": "phase-03",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-03/atom-09-upload-pipeline.md"
     },
     "atom-10-ledger-delete-metrics": {
       "phase": "phase-03",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-03/atom-10-ledger-delete-metrics.md"
     },
     "atom-11-hybrid-retrieval": {
       "phase": "phase-04",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-04/atom-11-hybrid-retrieval.md"
     },
     "atom-12-chat-stream": {
       "phase": "phase-04",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-04/atom-12-chat-stream.md"
     },
     "atom-13-sessions-history": {
       "phase": "phase-04",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-04/atom-13-sessions-history.md"
     },
     "atom-14-watcher-daemon": {
       "phase": "phase-05",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-05/atom-14-watcher-daemon.md"
     },
     "atom-15-frontend-scaffold-auth": {
       "phase": "phase-05",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-05/atom-15-frontend-scaffold-auth.md"
     },
     "atom-16-chat-ui": {
       "phase": "phase-05",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-05/atom-16-chat-ui.md"
     },
     "atom-17-admin-dashboard": {
       "phase": "phase-05",
-      "status": "DRAFT",
+      "status": "COMMITTED",
       "file": "docs/atoms/phase-05/atom-17-admin-dashboard.md"
     }
   }
