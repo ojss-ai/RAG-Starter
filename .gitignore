@@ -18,3 +18,5 @@ volumes/
 
 # runtime upload storage
 data/
+# dev-up.ps1 / dev-down.ps1 process tracking
+.dev-pids
