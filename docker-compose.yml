@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rag-dev-only}
       POSTGRES_DB: ${POSTGRES_DB:-rag}
     ports:
-      - "127.0.0.1:5432:5432"   # loopback only — compose-internal services use the service name
+      - "127.0.0.1:5433:5432"   # loopback only — compose-internal services use the service name; host port 5432 taken by a native Postgres service
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -39,6 +39,9 @@ services:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio-dev-only}
     command: minio server /minio_data --console-address ":9001"
+    ports:
+      - "127.0.0.1:9000:9000"   # S3 API
+      - "127.0.0.1:9001:9001"   # web console
     volumes:
       - minio:/minio_data
     healthcheck:
@@ -53,6 +56,8 @@ services:
     environment:
       ETCD_ENDPOINTS: etcd:2379
       MINIO_ADDRESS: minio:9000
+      MINIO_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-minio-dev-only}
     ports:
       - "127.0.0.1:19530:19530"   # Milvus standalone ships unauthenticated — never expose beyond loopback
       - "127.0.0.1:9091:9091"
@@ -69,6 +74,16 @@ services:
       timeout: 20s
       retries: 5
       start_period: 90s
+
+  attu:
+    image: zilliz/attu:v2.4.3
+    environment:
+      MILVUS_URL: milvus:19530
+    ports:
+      - "127.0.0.1:3001:3000"   # web GUI — http://localhost:3001
+    depends_on:
+      milvus:
+        condition: service_healthy
 
   api:
     build: ./backend
