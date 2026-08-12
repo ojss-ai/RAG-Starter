@@ -1,6 +1,6 @@
 # atom-05-rbac-api-keys
 
-- Status: READY
+- Status: COMMITTED
 - Phase: phase-02-security (`docs/plans/phase-02-security.md`, item §02.2)
 - Traces: FR-15, FR-16, FR-17
 - Depends on: atom-04
@@ -374,7 +374,7 @@ async def test_admin_creates_user_and_key(client, admin_headers, app):
 
 def _ingest_probe(app):
     """Mount a scope probe route so require_ingest is exercised over HTTP."""
-    if not any(r.path == "/test/ingest-probe" for r in app.routes):
+    if not any(getattr(r, "path", None) == "/test/ingest-probe" for r in app.routes):
         @app.post("/test/ingest-probe")
         async def probe(principal: Annotated[Principal, Depends(require_ingest)]):
             return {"kind": principal.kind, "label": principal.label}
@@ -431,3 +431,11 @@ is test-only and mounted idempotently per test app instance.
 ## Review Log
 
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom (extracted all file= blocks). One deviation: probe
+  helper's route-existence check used `r.path`, which breaks on newer FastAPI where
+  `app.routes` contains `_IncludedRouter` entries without `.path`; changed to
+  `getattr(r, "path", None)` in test + atom doc. `pytest -q` → 22 passed.
+- 2026-07-17 — VALIDATED. Suite green; manual smoke against uvicorn: admin JWT →
+  POST /admin/keys 201 (rgs_ plaintext once), GET list (no plaintext), DELETE → 204.
+  No OPEN findings. review-change clean (scope: atom-05 files only).

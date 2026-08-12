@@ -1,6 +1,6 @@
 # atom-16-chat-ui
 
-- Status: DRAFT
+- Status: COMMITTED
 - Phase: phase-05-clients (`docs/plans/phase-05-clients.md`, item §05.3)
 - Traces: FR-9 (UI), FR-10 (UI), FR-11 (UI)
 - Depends on: atom-15
@@ -607,4 +607,12 @@ citation hover panel is pure CSS (`group-hover`) — no portal/library needed.
 
 ## Review Log
 
+- 2026-07-17 — review-atom: freshness ✓ (SSE contract matches atom-12 as landed: session/token/sources/done events, {"t": ...} token shape; sessions API matches atom-13; lib/api + token helpers as landed in atom-15), completeness ✓, traceability ✓ (FR-9/10/11 UI / plan §05.3). Certified READY.
+
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom, zero deviations. Oracle: `tsc --noEmit` clean,
+  `npm test` 9/9 (sse parser incl. partial-frame buffering; citation splitting),
+  `next build` clean (/chat route present).
+- 2026-07-17 — VALIDATED. All oracle legs green; SSE parser verified against the exact
+  frame format the backend emits (tested in atom-12). No OPEN findings. review-change clean.

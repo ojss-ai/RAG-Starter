@@ -1,6 +1,6 @@
 # atom-04-auth-core
 
-- Status: READY
+- Status: COMMITTED
 - Phase: phase-02-security (`docs/plans/phase-02-security.md`, item §02.1; audit service pulled forward from §02.3 because logins must be audited)
 - Traces: FR-14, FR-17
 - Depends on: atom-02
@@ -486,3 +486,13 @@ The audit row commits in the same transaction as the login attempt handling.
   (chunks not cascade-deleted on SQLite; fails even in isolation now, though it passed at
   atom-02 time). Suspect area: SQLite FK pragma vs passive_deletes on the shared in-memory
   engine. Resume: debug cascade test, then finish atom-04 validate/commit.
+
+- 2026-07-17 — RESUMED. Root cause of `test_chunk_cascade_delete`: `build_engine` never
+  issued `PRAGMA foreign_keys=ON` on SQLite connections, so `ON DELETE CASCADE`
+  (relied on via `passive_deletes=True`) was a no-op. Fixed: `connect` event listener on
+  `engine.sync_engine` sets the pragma for sqlite dialect only. Files touched:
+  `backend/app/db.py`. Tests: `python -m pytest -q` → 17 passed. Deviation from atom code:
+  none beyond db.py (atom-02 file) gaining the pragma listener.
+- 2026-07-17 — VALIDATED. Suite 17/17 green. Manual verification executed against
+  `uvicorn app.main:app` (sqlite oracle, alembic upgrade head first): POST /auth/login →
+  token, GET /auth/me → admin user, /healthz + /readyz OK. No OPEN findings.

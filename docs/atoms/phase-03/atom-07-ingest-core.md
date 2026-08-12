@@ -1,6 +1,6 @@
 # atom-07-ingest-core
 
-- Status: DRAFT
+- Status: COMMITTED
 - Phase: phase-03-ingestion (`docs/plans/phase-03-ingestion.md`, item §03.1)
 - Traces: FR-1, FR-2, NFR-8
 - Depends on: atom-06
@@ -251,4 +251,10 @@ dim explicitly.
 
 ## Review Log
 
+- 2026-07-17 — review-atom: freshness ✓ (all embed_*/chunk_* settings exist in config.py; no drift since authoring), completeness ✓ (full code blocks, exact paths, tests listed), traceability ✓ (FR-1, FR-2, NFR-8 / plan §03.1). Certified READY.
+
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom, zero deviations. `pytest -q` → 32 passed.
+- 2026-07-17 — VALIDATED. All atom files present with specified behavior; verification
+  step (full suite) green. No OPEN findings. review-change clean.

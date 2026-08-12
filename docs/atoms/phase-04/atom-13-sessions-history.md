@@ -1,6 +1,6 @@
 # atom-13-sessions-history
 
-- Status: DRAFT
+- Status: COMMITTED
 - Phase: phase-04-chat (`docs/plans/phase-04-chat.md`, item §04.3)
 - Traces: FR-11, FR-15
 - Depends on: atom-12
@@ -188,4 +188,12 @@ async def test_endpoints_require_auth(client):
 
 ## Review Log
 
+- 2026-07-17 — review-atom: freshness ✓ (chat stream + models as landed in atom-12; cascade delete verified working since atom-04 fk-pragma fix), completeness ✓, traceability ✓ (FR-11/15 / plan §04.3). Certified READY.
+
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom (helper merged + deleted; main.py delta applied).
+  Zero deviations. `pytest -q` → 61 passed.
+- 2026-07-17 — VALIDATED. History (4 turns), cascade clear → 404, owner-privacy incl.
+  admin, no-existence-oracle 404s, auth gates all green over HTTP. No OPEN findings.
+  review-change clean.

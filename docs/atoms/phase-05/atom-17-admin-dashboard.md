@@ -1,6 +1,6 @@
 # atom-17-admin-dashboard
 
-- Status: DRAFT
+- Status: COMMITTED
 - Phase: phase-05-clients (`docs/plans/phase-05-clients.md`, item §05.4)
 - Traces: FR-6 (UI), FR-7 (UI), FR-20 (UI)
 - Depends on: atom-16
@@ -249,7 +249,7 @@ export function StatTile({
 }: {
   label: string;
   value: string;
-  sub?: string;
+  sub?: string | undefined; // exactOptionalPropertyTypes: callers pass explicit undefined
 }) {
   return (
     <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
@@ -611,4 +611,14 @@ per-mark hover. Zero-count rows keep their track so the set of states stays legi
 
 ## Review Log
 
+- 2026-07-17 — review-atom: freshness ✓ (metrics/documents/upload API shapes match atoms 09/10 as landed: MetricsOut fields, DocumentList {total, documents}, UploadResponse {documents, rejected}; apiFetch FormData path exists), completeness ✓, traceability ✓ (FR-6/7/20 UI / plan §05.4). Certified READY.
+
 ## Implementation Log
+
+- 2026-07-17 — Implemented per atom. One deviation (atom updated): StatTile `sub?: string`
+  rejects explicit undefined under exactOptionalPropertyTypes; widened to
+  `string | undefined`. Oracle: `tsc --noEmit` clean, `npm test` 12/12, `next build`
+  clean with /admin, /chat, /login routes.
+- 2026-07-17 — VALIDATED. All oracle legs green; status palette + direct labels per
+  dataviz notes; admin-only guard wired via AuthGuard adminOnly. No OPEN findings.
+  review-change clean.
