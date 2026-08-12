@@ -63,6 +63,35 @@ class OpenAIEmbeddingProvider:
         return out
 
 
+class VoyageEmbeddingProvider:
+    """Voyage AI /v1/embeddings — Anthropic's recommended embedding partner.
+    Response shape (data[].embedding, data[].index) matches OpenAI's, so batching
+    logic is identical; only the base URL/auth header/payload key differ."""
+
+    def __init__(self, api_key: str, model: str, dim: int, batch: int = 128,
+                 client: httpx.AsyncClient | None = None):
+        self.dim = dim
+        self._model = model
+        self._batch = batch
+        self._client = client or httpx.AsyncClient(
+            base_url="https://api.voyageai.com/v1",
+            headers={"Authorization": f"Bearer {api_key}"}, timeout=60)
+
+    async def embed(self, texts: list[str]) -> list[list[float]]:
+        out: list[list[float]] = []
+        for i in range(0, len(texts), self._batch):
+            batch = texts[i:i + self._batch]
+            try:
+                r = await self._client.post("/embeddings",
+                                            json={"model": self._model, "input": batch})
+                r.raise_for_status()
+            except httpx.HTTPError as exc:
+                raise EmbeddingError(str(exc)) from exc
+            data = r.json()["data"]
+            out.extend(item["embedding"] for item in sorted(data, key=lambda d: d["index"]))
+        return out
+
+
 def get_embedding_provider(settings: Settings) -> EmbeddingProvider:
     if settings.embed_provider == "fake":
         return FakeEmbeddingProvider(dim=settings.embed_dim)
@@ -70,4 +99,11 @@ def get_embedding_provider(settings: Settings) -> EmbeddingProvider:
         return OpenAIEmbeddingProvider(settings.embed_api_base, settings.embed_api_key,
                                        settings.embed_model, settings.embed_dim,
                                        settings.embed_batch)
+    if settings.embed_provider == "local":
+        return OpenAIEmbeddingProvider(settings.embed_api_base, settings.embed_api_key or "local",
+                                       settings.embed_model, settings.embed_dim,
+                                       settings.embed_batch)
+    if settings.embed_provider == "voyage":
+        return VoyageEmbeddingProvider(settings.embed_api_key, settings.embed_model,
+                                       settings.embed_dim, settings.embed_batch)
     raise ValueError(f"unknown embed provider: {settings.embed_provider}")

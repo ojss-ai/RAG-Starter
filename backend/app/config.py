@@ -17,14 +17,14 @@ class Settings(BaseSettings):
     bootstrap_admin_email: str = "admin@example.com"
     bootstrap_admin_password: str = "change-me-now"
 
-    embed_provider: str = "fake"  # fake | openai
+    embed_provider: str = "fake"  # fake | openai | local | voyage
     embed_api_base: str = "https://api.openai.com/v1"
     embed_api_key: str = ""
     embed_model: str = "text-embedding-3-small"
     embed_dim: int = 1536
     embed_batch: int = 64
 
-    llm_provider: str = "fake"  # fake | openai
+    llm_provider: str = "fake"  # fake | openai | anthropic | local
     llm_api_base: str = "https://api.openai.com/v1"
     llm_api_key: str = ""
     llm_model: str = "gpt-4o-mini"
